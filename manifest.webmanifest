@@ -1,0 +1,36 @@
+{
+  "name": "Grok Bot Meme Desk",
+  "short_name": "Meme Desk",
+  "description": "Solana memes \u00b7 strict RM \u00b7 paper trading desk",
+  "start_url": "/meme-desk-pwa/",
+  "scope": "/meme-desk-pwa/",
+  "id": "/meme-desk-pwa/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#07080a",
+  "theme_color": "#07080a",
+  "categories": [
+    "finance",
+    "utilities"
+  ],
+  "icons": [
+    {
+      "src": "/meme-desk-pwa/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/meme-desk-pwa/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/meme-desk-pwa/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
