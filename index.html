@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<base href="/meme-desk-pwa/">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#07080a"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Meme Desk"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<link rel="manifest" href="manifest.webmanifest"/>
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png"/>
+<title>Grok Bot · Solana memes</title>
+<style>
+:root{
+  --bg:#07080a; --card:#111318; --card2:#161a20; --line:#1e2430;
+  --green:#22c55e; --green2:#16a34a; --red:#ef4444; --muted:#8b93a7;
+  --text:#e8eaef; --yellow:#f59e0b; --blue:#3b82f6; --purple:#a855f7; --cyan:#06b6d4;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
+  font-size:15px;line-height:1.35}
+body{padding:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(40px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));max-width:480px;margin:0 auto;min-height:100dvh}
+.header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}
+.brand h1{margin:0;font-size:22px;font-weight:700;letter-spacing:-.02em}
+.brand .sub{color:var(--muted);font-size:12px;margin-top:2px}
+.live{display:inline-flex;align-items:center;gap:6px;background:rgba(34,197,94,.12);
+  color:var(--green);border:1px solid rgba(34,197,94,.35);padding:6px 10px;border-radius:999px;
+  font-size:12px;font-weight:600;white-space:nowrap}
+.live .dot{width:7px;height:7px;border-radius:50%;background:var(--green);
+  box-shadow:0 0 0 0 rgba(34,197,94,.7);animation:pulse 1.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.55)}70%{box-shadow:0 0 0 8px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+.pills{display:flex;gap:8px;margin:8px 0 12px;flex-wrap:wrap}
+.pill{background:var(--card);border:1px solid var(--line);color:var(--muted);
+  padding:5px 10px;border-radius:999px;font-size:11px;font-weight:600}
+.pill.green{color:var(--green);border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.08)}
+.ticker-wrap{overflow:hidden;margin:0 -12px 14px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  background:#0c0e12}
+.ticker{display:flex;gap:18px;padding:10px 12px;width:max-content;animation:marquee 28s linear infinite}
+.ticker:hover{animation-play-state:paused}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.titem{display:flex;align-items:center;gap:8px;font-size:12px;white-space:nowrap}
+.titem .sym{font-weight:700}
+.titem .px{color:var(--muted)}
+.up{color:var(--green)} .dn{color:var(--red)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 14px 12px;margin-bottom:12px}
+.card h2{margin:0 0 4px;font-size:13px;color:var(--muted);font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.eq-label{font-size:12px;color:var(--muted);margin-bottom:4px}
+.eq-big{font-size:40px;font-weight:800;letter-spacing:-.03em;line-height:1.05}
+.eq-row{display:flex;align-items:center;gap:10px;margin-top:6px;flex-wrap:wrap}
+.pnl{font-size:14px;font-weight:600}
+.mult{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.3);
+  padding:3px 8px;border-radius:999px;font-size:12px;font-weight:700}
+.wl{margin-left:auto;color:var(--muted);font-size:12px;font-weight:600}
+.wl b{color:var(--text)}
+.chart{height:110px;margin-top:12px;border-radius:12px;background:linear-gradient(180deg,rgba(34,197,94,.08),transparent);
+  border:1px solid var(--line);position:relative;overflow:hidden}
+.chart svg{width:100%;height:100%;display:block}
+.agent{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+.agent:last-child{border-bottom:0;padding-bottom:2px}
+.agent .ico{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;background:var(--card2);border:1px solid var(--line)}
+.agent .body{flex:1;min-width:0}
+.agent .name{font-weight:700;font-size:13px}
+.agent .sub{color:var(--muted);font-size:11px;margin-top:1px}
+.agent .act{font-size:12px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.agent .act b{font-weight:700}
+.agent .cnt{flex-shrink:0;font-size:10px;font-weight:700;padding:4px 8px;border-radius:999px;
+  background:var(--card2);border:1px solid var(--line);color:var(--muted);align-self:center}
+.feed{max-height:280px;overflow:auto;-webkit-overflow-scrolling:touch}
+.frow{display:grid;grid-template-columns:54px 64px 1fr;gap:6px;padding:7px 0;border-bottom:1px solid var(--line);font-size:12px}
+.frow:last-child{border-bottom:0}
+.ftime{color:var(--muted);font-variant-numeric:tabular-nums}
+.fagent{font-weight:700}
+.fagent.Scout{color:var(--blue)} .fagent.Filter{color:var(--red)} .fagent.Analyst{color:var(--purple)}
+.fagent.Executor{color:var(--green)} .fagent.Risk{color:var(--yellow)} .fagent.Logger{color:var(--cyan)}
+.fdet{color:#c5cad6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kills{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}
+.kill{font-size:11px}
+.kill .lab{color:var(--muted);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar{height:8px;background:#1a1f28;border-radius:99px;overflow:hidden}
+.bar > i{display:block;height:100%;background:linear-gradient(90deg,#ef4444,#f97316);border-radius:99px}
+.kill .n{float:right;color:var(--text);font-weight:700}
+.bw{display:flex;gap:8px;margin-top:12px}
+.bw .box{flex:1;background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:8px 10px;font-size:11px}
+.bw .box .t{color:var(--muted)}
+.bw .box .v{font-weight:700;margin-top:2px;font-size:13px}
+.pos{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);font-size:12px}
+.pos:last-child{border-bottom:0}
+.muted{color:var(--muted)}
+.foot{text-align:center;color:#555c6d;font-size:11px;margin-top:8px}
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="brand">
+      <h1>Grok Bot</h1>
+      <div class="sub">Solana memes · strict RM · paper → live</div>
+    </div>
+    <div class="live"><span class="dot"></span> Live</div>
+  </div>
+  <div class="pills">
+    <span class="pill green">night run</span>
+    <span class="pill">6 agents</span>
+    <span class="pill" id="cyclePill">cycle —</span>
+  </div>
+
+  <div class="ticker-wrap"><div class="ticker" id="ticker"></div></div>
+
+  <div class="card">
+    <div class="eq-label">Equity · $150 start · 8% max size</div>
+    <div class="eq-big" id="equity">$150.00</div>
+    <div class="eq-row">
+      <span class="pnl" id="pnl">+$0.00 (0.00%)</span>
+      <span class="mult" id="mult">1.00×</span>
+      <span class="wl">W/L <b id="wl">0/0</b></span>
+    </div>
+    <div class="chart"><svg id="chart" viewBox="0 0 400 110" preserveAspectRatio="none"></svg></div>
+  </div>
+
+  <div class="card">
+    <h2>Desk · 6 agents <span class="muted" id="scanTrade" style="font-weight:600;font-size:11px">0 scanned · 0 traded</span></h2>
+    <div id="agents"></div>
+  </div>
+
+  <div class="card" id="posCard" style="display:none">
+    <h2>Open positions</h2>
+    <div id="positions"></div>
+  </div>
+
+  <div class="card">
+    <h2>Logger <span class="muted" id="killedTotal" style="font-weight:600;font-size:11px">0 killed</span></h2>
+    <div class="feed" id="feed"></div>
+  </div>
+
+  <div class="card">
+    <h2>Killed by rule</h2>
+    <div class="kills" id="kills"></div>
+    <div class="bw">
+      <div class="box"><div class="t">Best trade</div><div class="v" id="best">—</div></div>
+      <div class="box"><div class="t">Worst trade</div><div class="v" id="worst">—</div></div>
+    </div>
+  </div>
+
+  <div class="foot" id="updated">paper only · updating…</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+function fmtUsd(n){ const s = (n<0?'-':'') + '$' + Math.abs(n).toFixed(2); return s; }
+function fmtPct(n){ return (n>=0?'+':'') + n.toFixed(2) + '%'; }
+function esc(s){ return String(s??'').replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+
+function renderTicker(items){
+  const el = $('ticker');
+  if(!items || !items.length){
+    el.innerHTML = '<div class="titem muted">waiting for scout…</div>';
+    return;
+  }
+  const html = items.map(t=>{
+    const chg = t.chg==null ? '' : `<span class="${t.chg>=0?'up':'dn'}">${fmtPct(t.chg)}</span>`;
+    const px = t.price==null ? '' : `<span class="px">$${Number(t.price).toPrecision(4)}</span>`;
+    return `<div class="titem"><span class="sym">${esc(t.symbol)}</span>${px}${chg}</div>`;
+  }).join('');
+  el.innerHTML = html + html; // loop
+}
+
+function renderAgents(agents){
+  $('agents').innerHTML = (agents||[]).map(a=>{
+    const L = a.latest||{};
+    const sym = L.symbol && L.symbol!=='—' ? `<b>${esc(L.symbol)}</b> · ` : '';
+    return `<div class="agent">
+      <div class="ico" style="border-color:${a.color}55;background:${a.color}18">${a.icon}</div>
+      <div class="body">
+        <div class="name">${esc(a.name)}</div>
+        <div class="sub">${esc(a.subtitle)}</div>
+        <div class="act">${sym}${esc(L.detail||'idle')}</div>
+      </div>
+      <div class="cnt">${esc(a.pill)}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderFeed(feed){
+  $('feed').innerHTML = (feed||[]).slice(0,30).map(f=>`
+    <div class="frow">
+      <div class="ftime">${esc(f.time)}</div>
+      <div class="fagent ${esc(f.agent)}">${esc(f.agent)}</div>
+      <div class="fdet">${f.symbol && f.symbol!=='—' ? '<b>'+esc(f.symbol)+'</b> · ' : ''}${esc(f.detail)}</div>
+    </div>`).join('') || '<div class="muted">no events yet</div>';
+}
+
+function renderKills(rules){
+  const max = Math.max(1, ...(rules||[]).map(r=>r.count));
+  $('kills').innerHTML = (rules||[]).map(r=>`
+    <div class="kill">
+      <div class="lab"><span class="n">${r.count}</span>${esc(r.rule)}</div>
+      <div class="bar"><i style="width:${(r.count/max*100).toFixed(0)}%"></i></div>
+    </div>`).join('') || '<div class="muted">no kills yet</div>';
+}
+
+function renderChart(curve){
+  const svg = $('chart');
+  if(!curve || curve.length<2){
+    svg.innerHTML = `<polyline fill="none" stroke="#22c55e" stroke-width="2" points="0,55 400,55"/>`;
+    return;
+  }
+  const xs = curve.map(c=>c.ts), ys = curve.map(c=>c.equity);
+  const minY = Math.min(...ys), maxY = Math.max(...ys);
+  const pad = Math.max(0.5, (maxY-minY)*0.15);
+  const y0 = minY - pad, y1 = maxY + pad;
+  const W=400,H=110;
+  const pts = curve.map((c,i)=>{
+    const x = (i/(curve.length-1))*W;
+    const y = H - ((c.equity-y0)/(y1-y0))*H;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+  const last = pts.split(' ').pop();
+  svg.innerHTML = `
+    <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#22c55e" stop-opacity=".35"/>
+      <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+    </linearGradient></defs>
+    <polygon fill="url(#g)" points="0,${H} ${pts} ${W},${H}"/>
+    <polyline fill="none" stroke="#22c55e" stroke-width="2.2" stroke-linejoin="round" points="${pts}"/>
+    <circle cx="${last.split(',')[0]}" cy="${last.split(',')[1]}" r="3.5" fill="#22c55e"/>`;
+}
+
+function renderPositions(pos){
+  if(!pos || !pos.length){ $('posCard').style.display='none'; return; }
+  $('posCard').style.display='block';
+  $('positions').innerHTML = pos.map(p=>`
+    <div class="pos">
+      <div><b>${esc(p.symbol)}</b><div class="muted">entry $${Number(p.entry).toPrecision(4)} · stop $${Number(p.stop).toPrecision(4)}</div></div>
+      <div style="text-align:right">
+        <div class="${p.pnl>=0?'up':'dn'}">${fmtUsd(p.pnl)} (${fmtPct(p.pnl_pct)})</div>
+        <div class="muted">${p.trail_active?'trail on':'hard stop'}</div>
+      </div>
+    </div>`).join('');
+}
+
+function apply(s){
+  $('equity').textContent = fmtUsd(s.equity);
+  const pnlEl = $('pnl');
+  pnlEl.textContent = `${s.pnl>=0?'+':''}${fmtUsd(s.pnl).replace('$','$')} (${fmtPct(s.pnl_pct)})`;
+  pnlEl.className = 'pnl ' + (s.pnl>=0?'up':'dn');
+  $('mult').textContent = (s.multiplier||1).toFixed(2) + '×';
+  $('wl').textContent = `${s.wins||0}/${s.losses||0}`;
+  $('scanTrade').textContent = `${s.scanned||0} scanned · ${s.traded||0} traded`;
+  $('killedTotal').textContent = `${s.killed||0} killed`;
+  $('cyclePill').textContent = `cycle ${s.cycle||0}`;
+  renderTicker(s.ticker);
+  renderAgents(s.agents);
+  renderFeed(s.feed);
+  renderKills(s.kill_rules);
+  renderChart(s.curve);
+  renderPositions(s.positions);
+  const bt = s.best_trade, wt = s.worst_trade;
+  $('best').textContent = bt ? `${bt.symbol} ${fmtUsd(bt.pnl)} (${fmtPct(bt.pnl_pct)})` : '—';
+  $('worst').textContent = wt ? `${wt.symbol} ${fmtUsd(wt.pnl)} (${fmtPct(wt.pnl_pct)})` : '—';
+  $('best').className = 'v ' + (bt && bt.pnl>=0 ? 'up':'');
+  $('worst').className = 'v ' + (wt && wt.pnl<0 ? 'dn':'');
+  $('updated').textContent = `paper only · ${s.updated_at_wib||''} · auto-refresh 10s`;
+}
+
+async function tick(){
+  try{
+    const REPO='mingz009988-ops/meme-desk-pwa';
+    const BASE='/meme-desk-pwa';
+    let sha = sessionStorage.getItem('deskTipSha')||'';
+    let at = +(sessionStorage.getItem('deskTipAt')||0);
+    if(!sha || Date.now()-at>90000){
+      try{
+        const cr = await fetch('https://api.github.com/repos/'+REPO+'/commits/gh-pages', {cache:'no-store', headers:{'Accept':'application/vnd.github+json'}});
+        if(cr.ok){ const cj=await cr.json(); if(cj&&cj.sha){ sha=cj.sha; sessionStorage.setItem('deskTipSha',sha); sessionStorage.setItem('deskTipAt',String(Date.now())); } }
+      }catch(_e){}
+    }
+    let r = null;
+    if(sha){
+      r = await fetch('https://raw.githubusercontent.com/'+REPO+'/'+sha+'/api/state.json?ts='+Date.now(), {cache:'no-store'});
+      if(!r.ok) r = await fetch('https://cdn.jsdelivr.net/gh/'+REPO+'@'+sha+'/api/state.json', {cache:'no-store'});
+    }
+    if(!r || !r.ok) r = await fetch('https://raw.githubusercontent.com/'+REPO+'/gh-pages/api/state.json?ts='+Date.now(), {cache:'no-store'});
+    if(!r.ok) r = await fetch(BASE+'/api/state.json?ts='+Date.now(), {cache:'no-store'});
+
+    const s = await r.json();
+    apply(s);
+  }catch(e){
+    $('updated').textContent = 'reconnect… ' + e.message;
+  }
+}
+tick();
+setInterval(tick, 10000);
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/meme-desk-pwa/sw.js', { scope: '/meme-desk-pwa/' }).catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
